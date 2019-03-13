@@ -14,7 +14,7 @@ import cr.ac.uam.Entidades.Excepciones.EmpleadoException;
  */
 public interface IPersonaData {
 
-    boolean grabarEmpleado(Empleado empleado)throws EmpleadoException;
+    String grabarEmpleado(Empleado empleado)throws EmpleadoException;
 
     Empleado login(String login) throws EmpleadoException;
     

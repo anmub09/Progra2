@@ -36,7 +36,7 @@ public class PersonaBussinnes {
         return false;
     }
 
-    public boolean grabarEmpleado(Empleado empleado) throws EmpleadoException {
+    public String grabarEmpleado(Empleado empleado) throws EmpleadoException {
         String valor = Criptografia.Criptografia(Enumerados.Crytpo.ENCRIPTAR, empleado.getPassword());
         empleado.setPassword(valor);
         return  personaDataAccess.grabarEmpleado(empleado);

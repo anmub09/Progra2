@@ -8,8 +8,12 @@ package cr.ac.uam.Intertfaz;
 import cr.ac.uam.Bussiness.PersonaBussinnes;
 import cr.ac.uam.Entidades.Empleado;
 import cr.ac.uam.Entidades.Enumerados;
+import cr.ac.uam.Entidades.Excepciones.EmpleadoException;
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -22,7 +26,7 @@ public class Clase10 extends javax.swing.JFrame {
      */
     private DefaultComboBoxModel modelEstadoCivil = new DefaultComboBoxModel();
     private DefaultComboBoxModel modelTipoEmpleado = new DefaultComboBoxModel();
-     private PersonaBussinnes personaBussinnes;
+    private PersonaBussinnes personaBussinnes;
 
     public Clase10() {
         initComponents();
@@ -37,7 +41,7 @@ public class Clase10 extends javax.swing.JFrame {
         jComboBoxEstadoCivil.setModel(modelEstadoCivil);
         jComboBoxTipoEmpleado.setModel(modelTipoEmpleado);
         jLabellError.setVisible(false);
-        personaBussinnes=new PersonaBussinnes();
+        personaBussinnes = new PersonaBussinnes();
     }
 
     private boolean validarFormularioPersonas() {
@@ -73,12 +77,30 @@ public class Clase10 extends javax.swing.JFrame {
         }
         return true;
     }
-  private Empleado capturaEmpleado()
-  {
-        return null;
-   
-  
-  }
+
+    private Empleado capturaEmpleado() {
+        Empleado empleado = new Empleado();
+        empleado.setApellidoMaterno(jTextFieldApellidoMaterno.getText());
+        empleado.setApellidoPaterno(jTextFieldApellidoPaterno.getText());
+        empleado.setEstadoCivil(Enumerados.EstadoCivil.valueOf(jComboBoxEstadoCivil.getSelectedItem().toString()));
+        empleado.setFechaNacimiento(jXDatePickerFechaNacimiento.getDate());
+        empleado.setLogin(jTextFieldLogin.getText());
+        empleado.setNombre(jTextFieldNombre.getText());
+        empleado.setNumeroCedula(jTextFieldCedula.getText());
+        empleado.setPassword(Arrays.toString(jPasswordField1.getPassword()));
+        empleado.setTipoEmpleado(Enumerados.TipoEmpleado.valueOf(jComboBoxTipoEmpleado.getSelectedItem().toString()));
+        return empleado;
+    }
+    private void limpiarFormularioEmpleado()
+    {
+        jTextFieldApellidoMaterno.setText("");
+        jTextFieldApellidoPaterno.setText("");
+        jTextFieldCedula.setText("");
+        jTextFieldLogin.setText("");
+        jTextFieldNombre.setText("");
+        jPasswordField1.setText("");
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -167,8 +189,9 @@ public class Clase10 extends javax.swing.JFrame {
             }
         });
 
-        jLabellError.setBackground(new java.awt.Color(255, 0, 51));
+        jLabellError.setBackground(new java.awt.Color(255, 255, 255));
         jLabellError.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabellError.setForeground(new java.awt.Color(255, 0, 0));
         jLabellError.setText("jLabel1");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -361,20 +384,23 @@ public class Clase10 extends javax.swing.JFrame {
     private void jButtonGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGuardarActionPerformed
         if (this.validarFormularioPersonas()) {
             jLabellError.setVisible(false);
-          //        personaBussinnes.grabarEmpleado();
+            try {
+                 String numeroEmpleado= personaBussinnes.grabarEmpleado(capturaEmpleado());
+                 JOptionPane.showMessageDialog(this, "Se creo un el empleado: "+ numeroEmpleado,"Confirmacion exitosa" , WIDTH);
+                 
+                this.limpiarFormularioEmpleado();
+            } catch (EmpleadoException ex) {
+                jLabellError.setVisible(true);
+                jLabellError.setText(ex.getMessage());
+            }
         }
-        else{
-        
-        
-        }
-   
     }//GEN-LAST:event_jButtonGuardarActionPerformed
-
+     
     /**
      * @param args the command line arguments
      */
-    //   public static void InvocarMDI() {
-    public static void main(String args[]) {
+   //public static void InvocarMDI() {
+   public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.

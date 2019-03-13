@@ -9,6 +9,7 @@ import static cr.ac.uam.DataAccess.UtilidadesArchivos.*;
 import cr.ac.uam.Entidades.*;
 import cr.ac.uam.Entidades.Excepciones.EmpleadoException;
 import java.util.Date;
+import java.util.Random;
 
 /**
  *
@@ -16,14 +17,32 @@ import java.util.Date;
  */
 public class PersonaData implements IPersonaData {
 
-    public boolean grabarEmpleado(Empleado empleado) throws EmpleadoException{
+    public String grabarEmpleado(Empleado empleado) throws EmpleadoException {
+        String numeroEmpleado = null;
+        empleado.setNumeroEmpleado(this.numeroEmpleado());
         String personaLinea = mapeaPersona(empleado);
         String empleadoLinea = mapeaEmpleado(empleado);
         boolean grabaArchivoPersona = UtilidadesArchivos.grabaArchivo(ARCHIVO_PERSONAS, personaLinea);
         boolean grabaArchivoEmpleado = UtilidadesArchivos.grabaArchivo(ARCHIVO_EMPLEADOS, empleadoLinea);
-        return grabaArchivoEmpleado && grabaArchivoPersona;
+        if (grabaArchivoEmpleado && grabaArchivoPersona) {
+            numeroEmpleado = empleado.getNumeroEmpleado();
+            return numeroEmpleado;
+        }
+        return numeroEmpleado;
     }
 
+    private String numeroEmpleado() {
+        Random aleatorio = new Random();
+        String alfa = "ABCDEFGHIJKLMNOPQRSTVWXYZ";
+        String cadena = "";
+        int numero;
+        int forma;
+        forma = (int) (aleatorio.nextDouble() * alfa.length() - 1 + 0);
+        numero = (int) (aleatorio.nextDouble() * 99 + 100);
+        cadena = cadena + alfa.charAt(forma) + numero;
+
+        return cadena;
+    }
 
     private String mapeaPersona(Persona persona) {
         StringBuilder builder = new StringBuilder();
@@ -42,6 +61,7 @@ public class PersonaData implements IPersonaData {
         builder.append(empleado.getPassword()).append(TOKEN);
         builder.append(empleado.getTipoEmpleado()).append(TOKEN);
         builder.append(empleado.getNumeroEmpleado()).append(TOKEN);
+        builder.append(empleado.getNumeroCedula()).append(TOKEN);
         return builder.toString();
     }
 
@@ -50,11 +70,19 @@ public class PersonaData implements IPersonaData {
         return mapeEmpleado(UtilidadesArchivos.buscarEnArchivo(ARCHIVO_EMPLEADOS, login));
     }
 
-    private Empleado mapeEmpleado(String lineaPersona) throws EmpleadoException {
-      
+    private Empleado mapeEmpleado(String lienaEmpleado) throws EmpleadoException {
+
         try {
+            Empleado empleado=new Empleado();
+            String[] arrayEmpleado = lienaEmpleado.split(TOKEN);
+            empleado.setLogin(arrayEmpleado[0]);
+            empleado.setPassword(arrayEmpleado[1]);
+            empleado.setTipoEmpleado(Enumerados.TipoEmpleado.valueOf(arrayEmpleado[2]));
+            empleado.setNumeroEmpleado(arrayEmpleado[3]);
+            empleado.setNumeroCedula(arrayEmpleado[4]);
+            
+            String lineaPersona = UtilidadesArchivos.buscarEnArchivo(ARCHIVO_PERSONAS, empleado.getNumeroCedula());
             String[] arrayPersona = lineaPersona.split(TOKEN);
-            Empleado empleado = new Empleado();
             empleado.setApellidoMaterno(arrayPersona[0]);
             empleado.setApellidoPaterno(arrayPersona[1]);
             empleado.setEstadoCivil(Enumerados.EstadoCivil.valueOf(arrayPersona[2]));
@@ -62,15 +90,10 @@ public class PersonaData implements IPersonaData {
             empleado.setNombre(arrayPersona[4]);
             empleado.setNumeroCedula(arrayPersona[5]);
 
-            String lineaEmpleado = UtilidadesArchivos.buscarEnArchivo(ARCHIVO_EMPLEADOS, empleado.getNumeroCedula());
-            String[] arrayEmpleado = lineaEmpleado.split(TOKEN);
-            empleado.setLogin(arrayEmpleado[1]);
-            empleado.setNumeroEmpleado(arrayEmpleado[2]);
-            empleado.setPassword(arrayEmpleado[2]);
-            empleado.setTipoEmpleado(Enumerados.TipoEmpleado.valueOf(arrayEmpleado[3]));
             return empleado;
 
         } catch (Exception e) {
+            e.printStackTrace();
             throw new EmpleadoException("Problemas al mapear el empleado intente de nuevo.... ");
         }
     }
