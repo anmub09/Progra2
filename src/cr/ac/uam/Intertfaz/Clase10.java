@@ -361,7 +361,7 @@ public class Clase10 extends javax.swing.JFrame {
     private void jButtonGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGuardarActionPerformed
         if (this.validarFormularioPersonas()) {
             jLabellError.setVisible(false);
-          //  personaBussinnes.grabarEmpleado();
+          //        personaBussinnes.grabarEmpleado();
         }
         else{
         
