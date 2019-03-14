@@ -87,7 +87,7 @@ public class Clase10 extends javax.swing.JFrame {
         empleado.setLogin(jTextFieldLogin.getText());
         empleado.setNombre(jTextFieldNombre.getText());
         empleado.setNumeroCedula(jTextFieldCedula.getText());
-        empleado.setPassword(Arrays.toString(jPasswordField1.getPassword()));
+        empleado.setPassword(new String(jPasswordField1.getPassword()));
         empleado.setTipoEmpleado(Enumerados.TipoEmpleado.valueOf(jComboBoxTipoEmpleado.getSelectedItem().toString()));
         return empleado;
     }
@@ -399,8 +399,8 @@ public class Clase10 extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-   //public static void InvocarMDI() {
-   public static void main(String args[]) {
+   public static void InvocarMDI() {
+ //  public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.

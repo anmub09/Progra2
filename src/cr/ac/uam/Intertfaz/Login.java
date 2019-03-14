@@ -9,6 +9,7 @@ import cr.ac.uam.Bussiness.PersonaBussinnes;
 import cr.ac.uam.Entidades.Excepciones.EmpleadoException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -111,7 +112,9 @@ public class Login extends javax.swing.JFrame {
         if (validaCamposFormulario()) {
             try {
                 if (personaBussinnes.login(loginTextField.getText(), String.valueOf(jPasswordField1.getPassword()))) {
-                   // Clase10.InvocarMDI();
+                    JOptionPane.showMessageDialog(this, "Bienvenido: "+ loginTextField.getText());
+                    Clase10.InvocarMDI();
+                    this.setVisible(false);
                 } else {
                     mensajeDeError.setText("Problemas para iniciar sesion");
                     mensajeDeError.setEnabled(true);

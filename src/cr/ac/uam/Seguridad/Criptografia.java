@@ -7,6 +7,7 @@ package cr.ac.uam.Seguridad;
 
 import cr.ac.uam.Entidades.Enumerados.Crytpo;
 import java.security.*;
+import java.util.Arrays;
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
@@ -18,7 +19,6 @@ import javax.xml.bind.DatatypeConverter;
  */
 public class Criptografia {
 
-    private static SecureRandom sr = new SecureRandom();
     public static final String CLAVE = "FooBar1234567890";//128 BITS 
 
     private static String encriptar(String clave, byte[] iv, String value) {
@@ -42,7 +42,8 @@ public class Criptografia {
             cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, new IvParameterSpec(vector));
 
             byte[] dec = cipher.doFinal(DatatypeConverter.parseBase64Binary(encriptado));
-            return new String(dec);
+            String s = new String(dec);
+            return s;
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -51,17 +52,25 @@ public class Criptografia {
 
     public static String Criptografia(Crytpo cripto, String valor) {
         String salida = "";
-        byte[] vector = new byte[16];
-        sr.nextBytes(vector);
+        byte[] vector = llenaArray();
+
         switch (cripto) {
             case DESENCRIPTAR: {
-                salida = decriptar(CLAVE, vector, valor);
+               return  decriptar(CLAVE, vector, valor);
             }
             case ENCRIPTAR: {
-                salida = encriptar(CLAVE, vector, valor);
+                return encriptar(CLAVE, vector, valor);
             }
         }
         return salida;
+    }
+
+    private static byte[] llenaArray() {
+        byte[] vector = new byte[16];
+        for (int i = 0; i < vector.length; i++) {
+            vector[i] = (byte) i;
+        }
+        return vector;
     }
 
 }
